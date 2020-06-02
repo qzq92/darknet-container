@@ -18,3 +18,6 @@ docker-compose up -d
 docker attach <container_name>
 
 ```
+
+## Credits
+Following darknet installation from https://github.com/AlexeyAB/darknet & opencv installation from https://linuxize.com/post/how-to-install-opencv-on-ubuntu-18-04/
