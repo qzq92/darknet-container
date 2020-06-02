@@ -1,0 +1,17 @@
+version: '2.3'
+
+services:
+  darknet-container:
+    build: .
+    runtime: nvidia
+    image: limwenyao/darknet:latest
+    container_name: darknet-container
+#    user: "1000:1000" # terminal execute (id -u && id -g), fill in the user and group id
+    stdin_open: true
+    tty: true
+#    ports:
+#    - "8888:8888"
+    volumes:
+      - ./../data:/data
+
+

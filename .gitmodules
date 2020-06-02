@@ -1,0 +1,9 @@
+[submodule "darknet"]
+	path = darknet
+	url = https://github.com/AlexeyAB/darknet.git
+[submodule "dependencies/opencv"]
+	path = dependencies/opencv
+	url = https://github.com/opencv/opencv.git
+[submodule "dependencies/opencv_contrib"]
+	path = dependencies/opencv_contrib
+	url = https://github.com/opencv/opencv_contrib.git
