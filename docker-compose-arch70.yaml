@@ -1,0 +1,17 @@
+version: '2.3'
+
+services:
+  darknet-container:
+    build:
+      context: .
+      args:
+        arch: " -gencode arch=compute_70,code=[sm_70,compute_70]"
+    runtime: nvidia
+    image: limwenyao/darknet:dev-arch70
+    container_name: darknet-container
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./src/data:/data
+
+

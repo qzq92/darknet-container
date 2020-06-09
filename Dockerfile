@@ -28,9 +28,11 @@ WORKDIR /darknet
 
 COPY ./darknet /darknet
 
+ARG arch='-gencode arch=compute_50,code=[sm_50,compute_50] -gencode arch=compute_52,code=[sm_52,compute_52] -gencode arch=compute_60,code=[sm_60,compute_60] -gencode arch=compute_61,code=[sm_61,compute_61] -gencode arch=compute_70,code=[sm_70,compute_70] -gencode arch=compute_75,code=[sm_75,compute_75]'
+
 # Refer to darknet Makefile for options based on hardware
 # RTX 2070
-RUN make GPU=1 CUDNN=1 CUDNN_HALF=1 OPENCV=1 LIBSO=1 ARCH=' -gencode arch=compute_75,code=[sm_75,compute_75]'
+RUN make GPU=1 CUDNN=1 CUDNN_HALF=1 OPENCV=1 LIBSO=1 ARCH=' ${arch}'
 
 # Tesla V100
 #RUN make GPU=1 CUDNN=1 CUDNN_HALF=1 OPENCV=1 LIBSO=1 ARCH=' -gencode arch=compute_70,code=[sm_70,compute_70]'
