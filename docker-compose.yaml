@@ -9,7 +9,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./src/data:/data
+      - ./data:/data
 
 # Tesla V100
 # ARCH= -gencode arch=compute_70,code=[sm_70,compute_70]
