@@ -60,30 +60,19 @@ def convert_annotation(dir_pascal_anno, dir_yolo_anno, image_path, classes):
     in_file.close()
 
 
-def main():
-    parser = argparse.ArgumentParser(description='Convert pascalVOC to darknet labels')
-    parser.add_argument('-n', '--names', type=str, required=True,
-                        help='A darknet .names file containing class names')
-    parser.add_argument('-d', '--dir', type=str, help='Other main directory')
-    parser.add_argument('-s', '--subdir', type=str,
-                        help='Specify multiple sub-directories of pascalVOC folders. NOT IN USE')
-    parser.add_argument('-t', '--textfile', type=str,
-                        help='Path to save text file of images for training. Default does not generate')
-    parser.add_argument('-rt', '--textfileroot', type=str,
-                        help='Use only if running in container. Specify container path to data root. Default is host root')
-
-    args = parser.parse_args()
-    classes = parse_names_file(args.names)
-    main_dir = os.path.abspath(args.dir) if (args.dir and os.path.exists(args.dir)) else os.getcwd()
+def main(argnames=None, argdir=None, argsubdir=None, argtextfile=None, argtextfileroot=None):
+    assert argnames is not None, 'Please specify path to darknet .names configuration file'
+    classes = parse_names_file(argnames)
+    main_dir = os.path.abspath(argdir) if (argdir and os.path.exists(argdir)) else os.getcwd()
     dirs = [main_dir]
-    if args.textfile is not None:
-        save_textfile = os.path.join(os.path.abspath(args.textfile), 'train.txt') if os.path.isdir(args.textfile) else \
-            os.path.abspath(args.textfile)
+    if argtextfile is not None:
+        save_textfile = os.path.join(os.path.abspath(argtextfile), 'generated.txt') if os.path.isdir(argtextfile) else \
+            os.path.abspath(argtextfile)
         list_file = open(save_textfile, 'w')
     else:
         save_textfile = None
         list_file = None
-    textfileroot = os.path.abspath(args.textfileroot) if args.textfileroot else None
+    textfileroot = os.path.abspath(argtextfileroot) if argtextfileroot else None
 
     for directory in dirs:
         dir_pascal = os.path.join(directory, 'Annotations')
@@ -105,9 +94,24 @@ def main():
                     list_file.write(os.path.join(textfileroot, os.path.relpath(image_path, start=main_dir)) + '\n')
                 else:
                     list_file.write(image_path + '\n')
-    if args.textfile:
+    if argtextfile:
         list_file.close()
+    print('Conversion Completed.')
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Convert pascalVOC to darknet labels')
+    parser.add_argument('-n', '--names', type=str, required=True,
+                        help='A darknet .names file containing class names')
+    parser.add_argument('-d', '--dir', type=str, help='Other main directory')
+    parser.add_argument('-s', '--subdir', type=str,
+                        help='Specify multiple sub-directories of pascalVOC folders. NOT IN USE')
+    parser.add_argument('-t', '--textfile', type=str,
+                        help='Path to save text file of images for training. Default does not generate')
+    parser.add_argument('-rt', '--textfileroot', type=str,
+                        help='Use only if running preprocesing in host machine but running training in container, '
+                             'so that textfile image directory mapping will have correct container path.')
+
+    args = parser.parse_args()
+    main(argnames=args.names, argdir=args.dir, argsubdir=args.subdir, argtextfile=args.textfile, argtextfileroot=args.textfileroot)
+

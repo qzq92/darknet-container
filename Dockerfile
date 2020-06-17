@@ -1,14 +1,19 @@
 FROM nvcr.io/nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 
-RUN apt-get update && apt-get install -y build-essential vim make cmake git pkg-config libgtk-3-dev \
+RUN apt-get update && apt-get install -y build-essential vim make \
+    cmake git python3-pip pkg-config libgtk-3-dev \
     libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
     libxvidcore-dev libx264-dev libjpeg-dev libpng-dev libtiff-dev \
-    gfortran openexr libatlas-base-dev python3-dev python3-numpy \
-    libtbb2 libtbb-dev libdc1394-22-dev
+    gfortran openexr libatlas-base-dev libtbb2 libtbb-dev libdc1394-22-dev
+
+#RUN ln -s python3 /usr/bin/python && ln -s pip3 /usr/bin/pip
+
+#Install python dependencies
+WORKDIR /dependencies
+COPY ./requirements.txt /dependencies/requirements.txt
+RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
 # Install opencv dependencies
-WORKDIR /dependencies
-
 COPY ./dependencies /dependencies
 
 RUN cd opencv && \

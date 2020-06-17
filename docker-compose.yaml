@@ -8,8 +8,11 @@ services:
     container_name: darknet-container
     stdin_open: true
     tty: true
+    ports:
+    - "8888:8888"
     volumes:
       - ./data:/data
+      - ./src:/src
 
 # Tesla V100
 # ARCH= -gencode arch=compute_70,code=[sm_70,compute_70]
