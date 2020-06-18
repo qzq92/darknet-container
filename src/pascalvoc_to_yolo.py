@@ -103,14 +103,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Convert pascalVOC to darknet labels')
     parser.add_argument('-n', '--names', type=str, required=True,
                         help='A darknet .names file containing class names')
-    parser.add_argument('-d', '--dir', type=str, help='Other main directory')
+    parser.add_argument('-d', '--dir', type=str, help='Other main directory. Default finds dataset in current dir')
     parser.add_argument('-s', '--subdir', type=str,
                         help='Specify multiple sub-directories of pascalVOC folders. NOT IN USE')
     parser.add_argument('-t', '--textfile', type=str,
                         help='Path to save text file of images for training. Default does not generate')
     parser.add_argument('-rt', '--textfileroot', type=str,
                         help='Use only if running preprocesing in host machine but running training in container, '
-                             'so that textfile image directory mapping will have correct container path.')
+                             'so that textfile image directory mapping will have correct container path. '
+                             'Defaults to -d dir from where its run from')
 
     args = parser.parse_args()
     main(argnames=args.names, argdir=args.dir, argsubdir=args.subdir, argtextfile=args.textfile, argtextfileroot=args.textfileroot)
