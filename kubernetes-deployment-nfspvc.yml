@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: darknet-container-voc-svc
+#  namespace:default
+  labels:
+    app: darknet-container-voc-svc
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    name: http
+    targetPort: 8888
+  selector:
+    app: darknet-container-voc
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: darknet-container-voc
+#  namespace:default
+  labels:
+    app: darknet-container-voc
+spec:
+  securityContext:
+    fsGroup: 0
+  volumes:
+  - name: darknet-container-voc-datamount
+    persistentVolumeClaim: darknet-container-voc-pvc
+  containers:
+  - name: darknet-container
+    image: limwenyao/darknet:dev-arch-multi
+    imagePullPolicy: IfNotPresent
+    workingDir: /
+    command: ["/bin/bash"]
+    args: ["-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root"]
+    resources:
+      limits:
+        nvidia.com/gpu: 1
+    ports:
+    - containerPort: 8888
+      name: notebook
+    volumeMounts:
+    - mountPath: /mnt
+      name: darknet-container-voc-datamount
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: darknet-container-voc-pv
+#  namespace:default
+spec:
+  storageClassName: darknet-container-voc-sc
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: "/nfs/k8s-pv/darknet-voc"
+    server: 192.168.111.100
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: darknet-container-voc-pvc
+#  namespace:default
+spec:
+  storageClassName: darknet-container-voc-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi

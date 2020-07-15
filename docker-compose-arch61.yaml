@@ -14,7 +14,7 @@ services:
     ports:
     - "8888:8888"
     volumes:
-      - ./data:/data
-      - ./src:/src
+      - ./data:/mnt/data
+      - ./src:/mnt/src
 
 
