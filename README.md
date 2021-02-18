@@ -1,5 +1,7 @@
 # Darknet Container Image
 
+This is a repository that contains dockerfile which serves to containerise Darknet framework using available pre-trainined model which can be used as a starting weights for object classification model training on VOC 2008 dataset. This also contains the installation of openCV library to facilitate the execution of specific code execution required for Darknet framework.
+
 ## Getting Started
 ```bash
 # 1) Make working directory
